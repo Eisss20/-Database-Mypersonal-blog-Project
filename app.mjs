@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import connectionPool from "./utils/db.mjs";
+import validatePostData  from "./middlewares/validatePostData.mjs"
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -25,7 +26,7 @@ app.use(express.json());
 // });
 
 
-app.get("/posts", async (req, res) => {
+app.get("/posts", async   (req, res) => {
   // ลอจิกในอ่านข้อมูลโพสต์ทั้งหมดในระบบ
   try {
     // 1) Access ข้อมูลใน Body จาก Request ด้วย req.body
@@ -127,7 +128,7 @@ app.get("/posts/:postId", async (req, res) => {
   const postIdFromClient = req.params.postId;
   try {
     const results = await connectionPool.query(
-      `SELECT * FROM posts WHERE id = $1`,  // ปิด backtick ตรงนี้
+      `SELECT * FROM posts WHERE id = $1`, 
       [postIdFromClient]  // แยก array ของพารามิเตอร์ออกจาก SQL query
     );
 
@@ -150,7 +151,7 @@ app.get("/posts/:postId", async (req, res) => {
 });
 
 
-app.post("/posts", async (req, res) => {
+app.post("/posts", [validatePostData],  async (req, res) => {
   const addNewPosts = req.body;
   /// 1. access body form  >>>> const addNewPosts = req.body;
 
@@ -182,7 +183,7 @@ app.post("/posts", async (req, res) => {
 });
 
 
-app.put("/posts/:postId", async (req, res) => {
+app.put("/posts/:postId", [validatePostData],  async (req, res) => {
 
   const postId = req.params.postId;
 
