@@ -145,7 +145,7 @@ const postRoute = Router()
   });
   
   
-  postRoute.post("/", [validate  PostData],  async (req, res) => {
+  postRoute.post("/", [validatePostData],  async (req, res) => {
     const addNewPosts = req.body;
     /// 1. access body form  >>>> const addNewPosts = req.body;
   
